@@ -1,4 +1,4 @@
-using NexusForever.Network.Message;
+﻿using NexusForever.Network.Message;
 
 namespace NexusForever.Network.World.Message.Model
 {

@@ -35,7 +35,7 @@ namespace NexusForever.Game.Abstract.Entity
         Vector3 LeashPosition { get; }
         float LeashRange { get; }
         IMovementManager MovementManager { get; }
-
+        
         uint Health { get; }
         uint MaxHealth { get; set; }
         uint Shield { get; set; }
@@ -64,7 +64,7 @@ namespace NexusForever.Game.Abstract.Entity
         /// Initialise <see cref="IWorldEntity"/> from an existing database model.
         /// </summary>
         void Initialise(EntityModel model);
-
+        
         ServerEntityCreate BuildCreatePacket();
 
         /// <summary>
@@ -75,7 +75,17 @@ namespace NexusForever.Game.Abstract.Entity
         /// <summary>
         /// Invoked when <see cref="IWorldEntity"/> is cast activated.
         /// </summary>
-        void OnActivateCast(IPlayer activator);
+        void OnActivateCast(IPlayer activator, uint interactionId);
+
+        /// <summary>
+        /// Invoked when <see cref="IWorldEntity"/>'s activate succeeds.
+        /// </summary>
+        void OnActivateSuccess(IPlayer activator);
+
+        /// <summary>
+        /// Invoked when <see cref="IWorldEntity"/>'s activation fails.
+        /// </summary>
+        void OnActivateFail(IPlayer activator);
 
         /// <summary>
         /// Return a collection of <see cref="IItemVisual"/> for <see cref="IWorldEntity"/>.

@@ -71,6 +71,27 @@ namespace NexusForever.Game.Abstract.Entity
         void CancelSpellCast(uint castingId);
 
         /// <summary>
+        /// Checks if this <see cref="IUnitEntity"/> is currently casting a spell.
+        /// </summary>
+        /// <returns></returns>
+        bool IsCasting();
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Spell4Entry"/> Id
+        /// </summary>
+        bool HasSpell(uint spell4Id, out ISpell spell, bool isCasting = false);
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="CastMethod"/>
+        /// </summary>
+        bool HasSpell(CastMethod castMethod, out ISpell spell);
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Func"/> predicate.
+        /// </summary>
+        bool HasSpell(Func<ISpell, bool> predicate, out ISpell spell);
+        
+        /// <summary>
         /// Determine if this <see cref="IUnitEntity"/> can attack supplied <see cref="IUnitEntity"/>.
         /// </summary>
         bool CanAttack(IUnitEntity target);

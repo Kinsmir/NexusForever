@@ -10,8 +10,8 @@ namespace NexusForever.Network.World.Message.Model
 
         public void Read(GamePacketReader reader)
         {
-            ClientUniqueId  = reader.ReadUInt();
-            ActivateUnitId  = reader.ReadUInt();
+            ClientUniqueId = reader.ReadUInt();
+            ActivateUnitId = reader.ReadUInt();
         }
     }
 }

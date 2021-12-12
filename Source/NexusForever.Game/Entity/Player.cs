@@ -718,11 +718,6 @@ namespace NexusForever.Game.Entity
             Account.RewardPropertyManager.SendInitialPackets();
             ResurrectionManager.SendInitialPackets();
 
-            Session.EnqueueMessageEncrypted(new ServerPlayerInnate
-            {
-                InnateIndex = InnateIndex
-            });
-
             log.Trace($"Player {Name} took {(DateTime.UtcNow - start).TotalMilliseconds}ms to send packets after add to map.");
         }
 

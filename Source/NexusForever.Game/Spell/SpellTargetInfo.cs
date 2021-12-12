@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using NexusForever.Game.Abstract.Entity;
 using NexusForever.Game.Abstract.Spell;
 using NexusForever.Game.Static.Spell;
@@ -8,6 +9,19 @@ namespace NexusForever.Game.Spell
 {
     public class SpellTargetInfo : ISpellTargetInfo
     {
+        public class SpellTargetInfoComparer : IEqualityComparer<ISpellTargetInfo>
+        {
+            public bool Equals(ISpellTargetInfo target1, ISpellTargetInfo target2)
+            {
+                return target1.Entity.Guid == target2.Entity.Guid;
+            }
+
+            public int GetHashCode([DisallowNull] ISpellTargetInfo obj)
+            {
+                return obj.Entity.Guid.GetHashCode();
+            }
+        }
+
         public class SpellTargetEffectInfo : ISpellTargetEffectInfo
         {
             public class DamageDescription : IDamageDescription
@@ -58,14 +72,23 @@ namespace NexusForever.Game.Spell
             }
         }
 
-        public SpellEffectTargetFlags Flags { get; }
+        public SpellEffectTargetFlags Flags { get; set; }
         public IUnitEntity Entity { get; }
+        public float Distance { get; }
         public List<ISpellTargetEffectInfo> Effects { get; } = new List<ISpellTargetEffectInfo>();
+        public TargetSelectionState TargetSelectionState { get; set; } = TargetSelectionState.New;
 
         public SpellTargetInfo(SpellEffectTargetFlags flags, IUnitEntity entity)
         {
             Flags  = flags;
             Entity = entity;
+        }
+
+        public SpellTargetInfo(SpellEffectTargetFlags flags, IUnitEntity entity, float distance)
+        {
+            Flags    = flags;
+            Entity   = entity;
+            Distance = distance;
         }
     }
 }
