@@ -66,7 +66,7 @@ namespace NexusForever.Game.Spell
                     double tickTime = Entry.TickTime;
                     if (Entry.DurationTime > 0)
                     {
-                        for (int i = 1; i >= Entry.DurationTime / tickTime; i++)
+                        for (int i = 1; i <= Entry.DurationTime / tickTime; i++)
                             events.EnqueueEvent(new SpellEvent(tickTime * i / 1000d, () =>
                             {
                                 caster.CastSpell(Entry.DataBits01, proxyParameters);
