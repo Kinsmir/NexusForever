@@ -262,6 +262,22 @@ namespace NexusForever.Game.Prerequisite
             }
         }
 
+        [PrerequisiteCheck(PrerequisiteType.QuestObjective)]
+        [PrerequisiteCheck(PrerequisiteType.QuestObjective2)]
+        private static bool PrerequisiteCheckQuestObjective(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
+        {
+            switch (comparison)
+            {
+                case PrerequisiteComparison.Equal:
+                    return player.QuestManager.GetQuestObjectiveProgress((ushort)objectId, (int)value) == 0;
+                case PrerequisiteComparison.NotEqual:
+                    return player.QuestManager.GetQuestObjectiveProgress((ushort)objectId, (int)value) != 0;
+                default:
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.Quest}!");
+                    return false;
+            }
+        }
+
         [PrerequisiteCheck(PrerequisiteType.Unhealthy)]
         private static bool PrerequesiteCheckUnhealthy(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
         {
