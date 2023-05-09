@@ -8,6 +8,7 @@ namespace NexusForever.Game.Abstract.Spell
     public interface ISpell : IDisposable, IUpdate
     {
         ISpellParameters Parameters { get; }
+        IUnitEntity Caster { get; }
 
         uint CastingId { get; }
         uint Spell4Id { get; }
@@ -19,8 +20,6 @@ namespace NexusForever.Game.Abstract.Spell
         bool IsWaiting { get; }
 
         bool HasGroup(uint groupId);
-
-        IUnitEntity Caster { get; }
 
         /// <summary>
         /// Begin cast, checking prerequisites before initiating.

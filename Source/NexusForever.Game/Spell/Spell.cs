@@ -790,7 +790,8 @@ namespace NexusForever.Game.Spell
                     });
             }
 
-            Caster.EnqueueToVisible(spellStart, true);
+            // We only send this to the client if this is not a ClientSideInteraction event
+            Caster.EnqueueToVisible(spellStart, Parameters.ClientSideInteraction == null);
         }
 
         private void SendSpellFinish()
@@ -980,7 +981,18 @@ namespace NexusForever.Game.Spell
         protected virtual void OnStatusChange(SpellStatus previousStatus, SpellStatus status)
         {
             if (status == SpellStatus.Casting)
+            {
+                if (Caster is IPlayer player && Parameters.ClientSideInteraction != null)
+                    player.Session.EnqueueMessageEncrypted(new ServerSpellStartClientInteraction
+                    {
+                        ClientUniqueId = Parameters.ClientSideInteraction.ClientUniqueId,
+                        CastingId = CastingId,
+                        CasterId = GetPrimaryTargetId(),
+                        Position = new Position(player.Map.GetEntity<WorldEntity>(GetPrimaryTargetId())?.Position ?? new Vector3())
+                    });
+
                 SendSpellStart();
+            }
         }
 
         protected virtual bool CanFinish()
