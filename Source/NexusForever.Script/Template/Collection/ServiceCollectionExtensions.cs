@@ -17,6 +17,7 @@ namespace NexusForever.Script.Template.Collection
             sc.AddTransient<IOwnedScriptCollection<ICreatureEntity>, OwnedScriptCollection<ICreatureEntity>>();
             sc.AddTransient<IOwnedScriptCollection<IPlayer>, OwnedScriptCollection<IPlayer>>();
             sc.AddTransient<IOwnedScriptCollection<IQuest>, OwnedScriptCollection<IQuest>>();
+            sc.AddTransient<IOwnedScriptCollection<ISimple>, OwnedScriptCollection<ISimple>>();
             sc.AddTransient<IOwnedScriptCollection<ISpell>, OwnedScriptCollection<ISpell>>();
         }
     }

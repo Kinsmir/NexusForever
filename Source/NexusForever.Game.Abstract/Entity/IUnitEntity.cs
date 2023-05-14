@@ -44,6 +44,11 @@ namespace NexusForever.Game.Abstract.Entity
         /// </summary>
         void RemoveSpellProperties(uint spell4Id);
 
+        /// Cast a <see cref="ISpell"/> with the supplied spell4 id.
+        /// </summary>
+        /// <param name="spell4Id"></param>
+        void CastSpell(uint spell4Id);
+
         /// <summary>
         /// Cast a <see cref="ISpell"/> with the supplied spell id and <see cref="ISpellParameters"/>.
         /// </summary>
