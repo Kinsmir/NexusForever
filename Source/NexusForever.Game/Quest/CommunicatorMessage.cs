@@ -51,7 +51,7 @@ namespace NexusForever.Game.Quest
                 if (questId == 0)
                     continue;
 
-                if (player.QuestManager.GetQuestState(questId) != (QuestState)entry.States[i])
+                if (player.QuestManager.GetQuestState(questId) <= (QuestState)entry.States[i])
                     return false;
             }
 

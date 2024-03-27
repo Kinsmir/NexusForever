@@ -17,7 +17,7 @@
         Path            = 52,
         Vital           = 73,
         SpellObj        = 129,
-		/// <summary>
+        /// <summary>
         /// Checks for an ObjectId, which is a hashed petflair id.
         /// </summary>
         HoverboardFlair = 190,
