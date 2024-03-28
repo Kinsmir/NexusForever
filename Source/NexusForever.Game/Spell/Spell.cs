@@ -4,6 +4,7 @@ using NexusForever.Game.Abstract.Spell.Event;
 using NexusForever.Game.Prerequisite;
 using NexusForever.Game.Spell.Event;
 using NexusForever.Game.Static.Spell;
+using NexusForever.GameTable;
 using NexusForever.GameTable.Model;
 using NexusForever.Network.World.Entity;
 using NexusForever.Network.World.Message.Model;
@@ -258,19 +259,19 @@ namespace NexusForever.Game.Spell
                     if (emotesId == 0)
                         return;
 
-                    caster.EnqueueToVisible(new ServerEntityEmote
+                    Caster.EnqueueToVisible(new ServerEntityEmote
                     {
                         EmotesId = emotesId,
-                        SourceUnitId = caster.Guid
+                        SourceUnitId = Caster.Guid
                     }, true);
 
                     if (visualEffect.Duration > 0)
                         events.EnqueueEvent(new SpellEvent(visualEffect.Duration / 1000d, () =>
                         {
-                            caster.EnqueueToVisible(new ServerEntityEmote
+                            Caster.EnqueueToVisible(new ServerEntityEmote
                             {
                                 EmotesId = 0,
-                                SourceUnitId = caster.Guid
+                                SourceUnitId = Caster.Guid
                             }, true);
                         }));
                 }
