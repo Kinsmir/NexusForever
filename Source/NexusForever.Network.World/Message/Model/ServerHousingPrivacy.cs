@@ -2,8 +2,8 @@ using NexusForever.Network.Message;
 
 namespace NexusForever.Network.World.Message.Model
 {
-    [Message(GameMessageOpcode.ServerHousingBasics)]
-    public class ServerHousingBasics : IWritable
+    [Message(GameMessageOpcode.ServerHousingPrivacy)]
+    public class ServerHousingPrivacy : IWritable
     {
         [Flags]
         public enum ResidencePrivacyLevelFlags

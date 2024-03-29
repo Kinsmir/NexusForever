@@ -5,6 +5,7 @@ namespace NexusForever.Network.Message
         State                           = 0x0000,
         State2                          = 0x0001,
         ServerHello                     = 0x0003,
+        Client009A                      = 0x009A, // client spell cast request, very similiar to 0x04DB, but for non-abilities -> mount, teleport, etc.
         ServerMaxCharacterLevelAchieved = 0x0036,
         ServerPlayerEnteredWorld        = 0x0061,
         ServerPlayerPet                 = 0x0068,
@@ -46,7 +47,7 @@ namespace NexusForever.Network.Message
         Server0104                      = 0x0104, // Galactic Archive
         ServerGenericError              = 0x0106,
         ClientGuildHolomarkUpdate       = 0x010C,
-        ServerHousingBasics             = 0x010E,
+        ServerHousingPrivacy            = 0x010E,
         ServerCharacter                 = 0x010F, // single character
         ServerItemAdd                   = 0x0111,
         ServerCharacterList             = 0x0117,
@@ -154,6 +155,7 @@ namespace NexusForever.Network.Message
         ServerCinematicActorAngle       = 0x0230,
         ServerCinematicNotify           = 0x0232,
         Server0237                      = 0x0237, // UI related, opens or closes different UI windows (bank, barber, ect...)
+        ClientWatchdogStatistics        = 0x023C,
         ClientPing                      = 0x0241,
         ClientEncrypted                 = 0x0244,
         ServerCombatLog                 = 0x0247,
@@ -220,6 +222,11 @@ namespace NexusForever.Network.Message
         ClientCheat                     = 0x03E0,
         ServerRealmBroadcast            = 0x03E1,
         ClientItemGenericUnlock         = 0x0400,
+        ClientGroupInvite               = 0x0416,
+        ClientGroupInviteResponse       = 0x041A,
+        ServerGroupInviteResult         = 0x041D,
+        ServerGroupInviteReceived       = 0x041F,
+        ServerGroupJoin                 = 0x0427,
         ClientQuestShareResult          = 0x045E,
         ClientQuestShare                = 0x045F,
         ClientGuildRegister             = 0x0481,
@@ -371,7 +378,7 @@ namespace NexusForever.Network.Message
         Server07FA                      = 0x07FA, // spell related
         Server07FB                      = 0x07FB, // spell miss info?
         ServerSpellCastResult           = 0x07FC,
-        ServerSpellStartClientInteraction = 0x07FD, // spell related
+        ServerSpellStartClientInteraction = 0x07FD,
         ServerSpellFinish               = 0x07FE,
         ServerSpellStart                = 0x07FF,
         ClientSpellStopCast             = 0x0801,
