@@ -3,7 +3,7 @@ using NexusForever.Network.Message;
 namespace NexusForever.Network.World.Message.Model
 {
     [Message(GameMessageOpcode.ServerAccountItemsPending)]
-    public class Server0979 : IWritable
+    public class ServerAccountItemsPending : IWritable
     {
         public class UnknownStructure0: IWritable
         {

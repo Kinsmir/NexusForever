@@ -3,8 +3,8 @@ using NexusForever.Network.World.Message.Model.Shared;
 
 namespace NexusForever.Network.World.Message.Model
 {
-    [Message(GameMessageOpcode.ClientStorefrontPurchaseCharacter)]
-    public class ClientStorefrontPurchaseCharacter : IReadable
+    [Message(GameMessageOpcode.ClientStorefrontPurchase)]
+    public class ClientStorefrontPurchase : IReadable
     {
         public uint OfferId { get; set; } // OfferId
         public byte Unknown1 { get; set; }

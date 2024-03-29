@@ -1,9 +1,9 @@
-﻿using NexusForever.Network.Message;
+using NexusForever.Network.Message;
 
 namespace NexusForever.Network.World.Message.Model
 {
-    [Message(GameMessageOpcode.ServerSpellList)]
-    public class ServerSpellList : IWritable
+    [Message(GameMessageOpcode.ServerAbilities)]
+    public class ServerAbilities : IWritable
     {
         public class Spell : IWritable
         {   
@@ -19,7 +19,7 @@ namespace NexusForever.Network.World.Message.Model
             }
         }
 
-        public List<Spell> Spells { get; set; } = new List<Spell>();
+        public List<Spell> Spells { get; set; } = new();
 
         public void Write(GamePacketWriter writer)
         {
