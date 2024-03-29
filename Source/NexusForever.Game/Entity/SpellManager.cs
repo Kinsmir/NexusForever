@@ -393,6 +393,10 @@ namespace NexusForever.Game.Entity
             foreach (IActionSetAmp actionSetAmp in actionSet.Amps)
             {
                 var spellEntry = GameTableManager.Instance.Spell4.GetEntry(actionSetAmp.Entry.Spell4IdAugment);
+
+                // TODO: Temp workaround for when the spell cannot be found for now
+                if (spellEntry == null) continue;
+                
                 if (!spells.ContainsKey(spellEntry.Spell4BaseIdBaseSpell)) // We don't reapply amps we already learned
                 {
                     AddSpell(spellEntry.Spell4BaseIdBaseSpell);
