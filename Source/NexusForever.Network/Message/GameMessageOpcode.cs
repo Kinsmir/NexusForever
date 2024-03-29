@@ -5,7 +5,6 @@ namespace NexusForever.Network.Message
         State                           = 0x0000,
         State2                          = 0x0001,
         ServerHello                     = 0x0003,
-        Client009A                      = 0x009A, // client spell cast request, very similiar to 0x04DB, but for non-abilities -> mount, teleport, etc.
         ServerMaxCharacterLevelAchieved = 0x0036,
         ServerPlayerEnteredWorld        = 0x0061,
         ServerPlayerPet                 = 0x0068,
