@@ -151,6 +151,20 @@ namespace NexusForever.Game.Prerequisite
             }
         }
 
+        [PrerequisiteCheck(PrerequisiteType.AccountItemClaimed)]
+        private static bool PrerequisiteCheckAccountItemClaimed(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            switch (comparison)
+            {
+                case PrerequisiteComparison.NotEqual:
+                    //return !player.Inventory.HasItem(value);
+                case PrerequisiteComparison.Equal:
+                    //return player.Inventory.HasItem(value);
+                default:
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.AccountItemClaimed}!");
+                    return false;
+            }
+        }
 
         [PrerequisiteCheck(PrerequisiteType.SpellBaseId)]
         private static bool PrerequisiteCheckSpellBaseId(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
@@ -163,6 +177,25 @@ namespace NexusForever.Game.Prerequisite
                     return player.SpellManager.GetSpell(objectId) != null;
                 default:
                     log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.Achievement}!");
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.CosmicRewards)]
+        private static bool PrerequisiteCheckCosmicRewards(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            switch (comparison)
+            {
+                case PrerequisiteComparison.NotEqual:
+                    //return player.Session.AccountCurrencyManager.GetAmount(Account.Static.AccountCurrencyType.CosmicReward) != value;
+                case PrerequisiteComparison.Equal:
+                    //return player.Session.AccountCurrencyManager.GetAmount(Account.Static.AccountCurrencyType.CosmicReward) == value;
+                case PrerequisiteComparison.GreaterThan:
+                case PrerequisiteComparison.LessThanOrEqual: 
+                    // The conditional below is intentionally "incorrect". It's possible PrerequisiteComparison 4 is actually GreaterThanOrEqual
+                    //return player.Session.AccountCurrencyManager.GetAmount(Account.Static.AccountCurrencyType.CosmicReward) >= value;
+                default:
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.CosmicRewards}!");
                     return false;
             }
         }
@@ -196,27 +229,136 @@ namespace NexusForever.Game.Prerequisite
             }
         }
 
+        [PrerequisiteCheck(PrerequisiteType.Stealth)]
+        private static bool PrerequisiteCheckStealth(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            // TODO: Add value to the check. It's a spell4 Id.
+
+            switch (comparison)
+            {
+                case PrerequisiteComparison.Equal:
+                    //return player.Stealthed == true; // TODO: Add OR check for Spell4 Effect
+                case PrerequisiteComparison.NotEqual:
+                    //return player.Stealthed == false; // TODO: Add AND check for Spell4 Effect
+                default:
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.TargetIsPlayer)]
+        private static bool PrerequisiteCheckTargetIsPlayer(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            // TODO: Currently this is a wasted effort. We only evaluate prereq's against Players. This suggests we may need to start evaluating against all entities.
+
+            switch (comparison)
+            {
+                case PrerequisiteComparison.Equal:
+                    return player is IPlayer;
+                case PrerequisiteComparison.NotEqual:
+                    return !(player is IPlayer);
+                default:
+                    log.Warn($"Unhandled {comparison} for {PrerequisiteType.TargetIsPlayer}!");
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.Unhealthy)]
+        private static bool PrerequesiteCheckUnhealthy(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            // TODO: Investigate further. Unknown what the value and objectId refers to at this time.
+
+            // Error message is "Cannot recall while in Unhealthy Time" when trying to use Rapid Transport & other recall spells
+            switch (comparison)
+            {
+                case PrerequisiteComparison.NotEqual:
+                    return !player.InCombat;
+                default:
+                    log.Warn($"Unhandled {comparison} for {PrerequisiteType.Unhealthy}!");
+                    return true;
+            }
+        }
+
         [PrerequisiteCheck(PrerequisiteType.Vital)]
         private static bool PrerequisiteCheckVital(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             switch (comparison)
             {
-                // TODO: Uncomment when Vitals are added ;)
-                
-                // case PrerequisiteComparison.Equal:
-                //     return player.GetVitalValue((Vital)objectId) == value;
-                // case PrerequisiteComparison.NotEqual:
-                //     return player.GetVitalValue((Vital)objectId) != value;
-                // case PrerequisiteComparison.GreaterThanOrEqual:
-                //     return player.GetVitalValue((Vital)objectId) >= value;
-                // case PrerequisiteComparison.GreaterThan:
-                //     return player.GetVitalValue((Vital)objectId) > value;
-                // case PrerequisiteComparison.LessThanOrEqual:
-                //     return player.GetVitalValue((Vital)objectId) <= value;
-                // case PrerequisiteComparison.LessThan:
-                //     return player.GetVitalValue((Vital)objectId) < value;
+                case PrerequisiteComparison.Equal:
+                    return player.GetVitalValue((Vital)objectId) == value;
+                case PrerequisiteComparison.NotEqual:
+                    return player.GetVitalValue((Vital)objectId) != value;
+                case PrerequisiteComparison.GreaterThanOrEqual:
+                    return player.GetVitalValue((Vital)objectId) >= value;
+                case PrerequisiteComparison.GreaterThan:
+                    return player.GetVitalValue((Vital)objectId) > value;
+                case PrerequisiteComparison.LessThanOrEqual:
+                    return player.GetVitalValue((Vital)objectId) <= value;
+                case PrerequisiteComparison.LessThan:
+                    return player.GetVitalValue((Vital)objectId) < value;
                 default:
                     log.Warn($"Unhandled {comparison} for {PrerequisiteType.Vital}!");
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.VitalPercent)]
+        private static bool PrerequisiteCheckVitalPercent(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            float max = 0;
+            switch (objectId)
+            {
+                case 1:
+                    max = player.GetPropertyValue(Property.BaseHealth);
+                    break;
+                case 3:
+                    max = player.GetPropertyValue(Property.ShieldCapacityMax);
+                    break;
+                case 5:
+                    max = player.GetPropertyValue(Property.ResourceMax0);
+                    break;
+                case 6:
+                    max = player.GetPropertyValue(Property.ResourceMax1);
+                    break;
+                case 8:
+                    max = player.GetPropertyValue(Property.ResourceMax3);
+                    break;
+                case 15:
+                    max = player.GetPropertyValue(Property.BaseFocusPool);
+                    break;
+                default:
+                    log.Warn($"Unhandled objectId: {objectId} for {PrerequisiteType.VitalPercent}");
+                    break;
+            }
+
+            float percentage = player.GetVitalValue((Vital)objectId) / max * 100;
+
+            switch (comparison)
+            {
+                case PrerequisiteComparison.GreaterThanOrEqual:
+                    return percentage >= value;
+                case PrerequisiteComparison.GreaterThan:
+                    return percentage > value;
+                case PrerequisiteComparison.LessThanOrEqual:
+                    return percentage <= value;
+                case PrerequisiteComparison.LessThan:
+                    return percentage < value;
+                default:
+                    log.Warn($"Unhandled {comparison} for {PrerequisiteType.Vital}!");
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.ActiveSpellCount)]
+        private static bool PrerequisiteCheckSpellActiveSpellCount(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            switch (comparison)
+            {
+                case PrerequisiteComparison.Equal:
+                    return player.GetActiveSpellCount(s => s.Spell4Id == objectId && !s.IsFinished) == value;
+                case PrerequisiteComparison.LessThanOrEqual:
+                    return player.GetActiveSpellCount(s => s.Spell4Id == objectId && !s.IsFinished) <= value;
+                default:
+                    log.Warn($"Unhandled {comparison} for {PrerequisiteType.ActiveSpellCount}");
                     return false;
             }
         }
@@ -236,6 +378,104 @@ namespace NexusForever.Game.Prerequisite
                     return player.SpellManager.GetSpell(value) == null;
                 default:
                     log.Warn($"Unhandled {comparison} for {PrerequisiteType.SpellObj}!");
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.SpellMechanic)]
+        private static bool PrerequisiteCheckSpellMechanic(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            uint resource = 0;
+            switch (objectId)
+            {
+                case 4:
+                    resource = (uint)player.GetVitalValue(Vital.SpellSurge);
+                    break;
+                default:
+                    log.Warn($"Unhandled objectId: {objectId} for {PrerequisiteType.SpellMechanic}");
+                    break;
+            }
+
+            switch (comparison)
+            {
+                case PrerequisiteComparison.GreaterThan:
+                    return resource > value;
+                default:
+                    log.Warn($"Unhandled {comparison} for {PrerequisiteType.SpellMechanic}");
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.PositionalRequirement)]
+        private static bool PrerequisiteCheckPositionalRequirement(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            if (target == null || objectId == 0)
+                return false;
+
+            PositionalRequirementEntry entry = GameTableManager.Instance.PositionalRequirement.GetEntry(objectId);
+
+            float angle = (target.Position.GetRotationTo(player.Position) - target.Rotation).X.ToDegrees();
+            float minBounds = entry.AngleCenter - entry.AngleRange / 2f;
+            float maxBounds = entry.AngleCenter + entry.AngleRange / 2f;
+            bool isAllowed = angle >= minBounds && angle <= maxBounds;
+                 
+            switch (comparison)
+            {
+                case PrerequisiteComparison.Equal:
+                    return isAllowed;
+                case PrerequisiteComparison.NotEqual:
+                    return !isAllowed;
+                default:
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.PositionalRequirement}!");
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.Entitlement)]
+        private static bool PrerequisiteCheckEntitlement(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            EntitlementEntry entry = GameTableManager.Instance.Entitlement.GetEntry(objectId);
+            if (entry == null)
+                throw new ArgumentException($"Invalid entitlement type {objectId}!");
+
+            uint currentValue = 0;
+
+            if (((EntitlementFlags)entry.Flags).HasFlag(EntitlementFlags.Character))
+                currentValue = player.Session.EntitlementManager.GetCharacterEntitlement((EntitlementType)objectId)?.Amount ?? 0u;
+            else
+                currentValue = player.Session.EntitlementManager.GetAccountEntitlement((EntitlementType)objectId)?.Amount ?? 0u;
+
+            switch (comparison)
+            {
+                case PrerequisiteComparison.Equal:
+                    return currentValue == value;
+                case PrerequisiteComparison.NotEqual:
+                    return currentValue != value;
+                case PrerequisiteComparison.GreaterThanOrEqual:
+                    return currentValue >= value;
+                case PrerequisiteComparison.GreaterThan:
+                    return currentValue > value;
+                case PrerequisiteComparison.LessThanOrEqual:
+                    return currentValue <= value;
+                case PrerequisiteComparison.LessThan:
+                    return currentValue < value;
+                default:
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.PositionalRequirement}!");
+                    return false;
+            }
+        }
+
+        [PrerequisiteCheck(PrerequisiteType.CostumeUnlocked)]
+        private static bool PrerequisiteCheckCostumeUnlocked(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        {
+            switch (comparison)
+            {
+                case PrerequisiteComparison.Equal:
+                    return player.CostumeManager.HasCostumeItemUnlocked(objectId);
+                case PrerequisiteComparison.NotEqual:
+                    return !player.CostumeManager.HasCostumeItemUnlocked(objectId);
+                default:
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.PositionalRequirement}!");
                     return false;
             }
         }
