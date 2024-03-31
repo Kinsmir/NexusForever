@@ -131,7 +131,7 @@ namespace NexusForever.Game.Prerequisite
                 case PrerequisiteComparison.Equal:
                     return (player.GetItemProficiencies() & (ItemProficiency)value) != 0;
                 default:
-                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.Achievement}!");
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.ItemProficiency}!");
                     return false;
             }
         }
@@ -283,6 +283,9 @@ namespace NexusForever.Game.Prerequisite
         {
             switch (comparison)
             {
+                // TODO: Uncomment when Vitals are added ;)
+                
+                /*
                 case PrerequisiteComparison.Equal:
                     return player.GetVitalValue((Vital)objectId) == value;
                 case PrerequisiteComparison.NotEqual:
@@ -295,6 +298,7 @@ namespace NexusForever.Game.Prerequisite
                     return player.GetVitalValue((Vital)objectId) <= value;
                 case PrerequisiteComparison.LessThan:
                     return player.GetVitalValue((Vital)objectId) < value;
+                */
                 default:
                     log.Warn($"Unhandled {comparison} for {PrerequisiteType.Vital}!");
                     return false;
@@ -304,7 +308,9 @@ namespace NexusForever.Game.Prerequisite
         [PrerequisiteCheck(PrerequisiteType.VitalPercent)]
         private static bool PrerequisiteCheckVitalPercent(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
         {
-            float max = 0;
+            // TODO: Uncomment when VitalPercent are added ;)
+            
+            /*float max = 0;
             switch (objectId)
             {
                 case 1:
@@ -345,7 +351,10 @@ namespace NexusForever.Game.Prerequisite
                 default:
                     log.Warn($"Unhandled {comparison} for {PrerequisiteType.Vital}!");
                     return false;
-            }
+            }*/
+            
+            log.Warn($"Unhandled {comparison} for {PrerequisiteType.VitalPercent}!");
+            return false;
         }
 
         [PrerequisiteCheck(PrerequisiteType.ActiveSpellCount)]
@@ -353,10 +362,14 @@ namespace NexusForever.Game.Prerequisite
         {
             switch (comparison)
             {
+                // TODO: Uncomment when ActiveSpellCount are added ;)
+                
+                /*
                 case PrerequisiteComparison.Equal:
                     return player.GetActiveSpellCount(s => s.Spell4Id == objectId && !s.IsFinished) == value;
                 case PrerequisiteComparison.LessThanOrEqual:
                     return player.GetActiveSpellCount(s => s.Spell4Id == objectId && !s.IsFinished) <= value;
+                */
                 default:
                     log.Warn($"Unhandled {comparison} for {PrerequisiteType.ActiveSpellCount}");
                     return false;
@@ -385,7 +398,9 @@ namespace NexusForever.Game.Prerequisite
         [PrerequisiteCheck(PrerequisiteType.SpellMechanic)]
         private static bool PrerequisiteCheckSpellMechanic(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
         {
-            uint resource = 0;
+            // TODO: Uncomment when SpellMechanic are added ;)
+            
+            /*uint resource = 0;
             switch (objectId)
             {
                 case 4:
@@ -394,12 +409,12 @@ namespace NexusForever.Game.Prerequisite
                 default:
                     log.Warn($"Unhandled objectId: {objectId} for {PrerequisiteType.SpellMechanic}");
                     break;
-            }
+            }*/
 
             switch (comparison)
             {
-                case PrerequisiteComparison.GreaterThan:
-                    return resource > value;
+                //case PrerequisiteComparison.GreaterThan:
+                //    return resource > value;
                 default:
                     log.Warn($"Unhandled {comparison} for {PrerequisiteType.SpellMechanic}");
                     return false;
@@ -409,6 +424,9 @@ namespace NexusForever.Game.Prerequisite
         [PrerequisiteCheck(PrerequisiteType.PositionalRequirement)]
         private static bool PrerequisiteCheckPositionalRequirement(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
         {
+            // TODO: Uncomment when PositionalRequirement are added ;)
+            
+            /*
             if (target == null || objectId == 0)
                 return false;
 
@@ -418,13 +436,14 @@ namespace NexusForever.Game.Prerequisite
             float minBounds = entry.AngleCenter - entry.AngleRange / 2f;
             float maxBounds = entry.AngleCenter + entry.AngleRange / 2f;
             bool isAllowed = angle >= minBounds && angle <= maxBounds;
+            */
                  
             switch (comparison)
             {
-                case PrerequisiteComparison.Equal:
-                    return isAllowed;
-                case PrerequisiteComparison.NotEqual:
-                    return !isAllowed;
+                //case PrerequisiteComparison.Equal:
+                //    return isAllowed;
+                //case PrerequisiteComparison.NotEqual:
+                //    return !isAllowed;
                 default:
                     log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.PositionalRequirement}!");
                     return false;
@@ -434,6 +453,9 @@ namespace NexusForever.Game.Prerequisite
         [PrerequisiteCheck(PrerequisiteType.Entitlement)]
         private static bool PrerequisiteCheckEntitlement(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
         {
+            // TODO: Uncomment when Entitlement are added ;)
+            
+            /*
             EntitlementEntry entry = GameTableManager.Instance.Entitlement.GetEntry(objectId);
             if (entry == null)
                 throw new ArgumentException($"Invalid entitlement type {objectId}!");
@@ -444,23 +466,24 @@ namespace NexusForever.Game.Prerequisite
                 currentValue = player.Session.EntitlementManager.GetCharacterEntitlement((EntitlementType)objectId)?.Amount ?? 0u;
             else
                 currentValue = player.Session.EntitlementManager.GetAccountEntitlement((EntitlementType)objectId)?.Amount ?? 0u;
+            */
 
             switch (comparison)
             {
-                case PrerequisiteComparison.Equal:
-                    return currentValue == value;
-                case PrerequisiteComparison.NotEqual:
-                    return currentValue != value;
-                case PrerequisiteComparison.GreaterThanOrEqual:
-                    return currentValue >= value;
-                case PrerequisiteComparison.GreaterThan:
-                    return currentValue > value;
-                case PrerequisiteComparison.LessThanOrEqual:
-                    return currentValue <= value;
-                case PrerequisiteComparison.LessThan:
-                    return currentValue < value;
+                //case PrerequisiteComparison.Equal:
+                //    return currentValue == value;
+                //case PrerequisiteComparison.NotEqual:
+                //    return currentValue != value;
+                //case PrerequisiteComparison.GreaterThanOrEqual:
+                //    return currentValue >= value;
+                //case PrerequisiteComparison.GreaterThan:
+                //    return currentValue > value;
+                //case PrerequisiteComparison.LessThanOrEqual:
+                //    return currentValue <= value;
+                //case PrerequisiteComparison.LessThan:
+                //    return currentValue < value;
                 default:
-                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.PositionalRequirement}!");
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.Entitlement}!");
                     return false;
             }
         }
@@ -470,12 +493,14 @@ namespace NexusForever.Game.Prerequisite
         {
             switch (comparison)
             {
-                case PrerequisiteComparison.Equal:
-                    return player.CostumeManager.HasCostumeItemUnlocked(objectId);
-                case PrerequisiteComparison.NotEqual:
-                    return !player.CostumeManager.HasCostumeItemUnlocked(objectId);
+                // TODO: Uncomment when CostumeUnlocked are added ;)
+                
+                //case PrerequisiteComparison.Equal:
+                //    return player.CostumeManager.HasCostumeItemUnlocked(objectId);
+                //case PrerequisiteComparison.NotEqual:
+                //    return !player.CostumeManager.HasCostumeItemUnlocked(objectId);
                 default:
-                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.PositionalRequirement}!");
+                    log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.CostumeUnlocked}!");
                     return false;
             }
         }
