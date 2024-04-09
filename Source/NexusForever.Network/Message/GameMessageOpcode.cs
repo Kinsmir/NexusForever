@@ -307,7 +307,7 @@ namespace NexusForever.Network.Message
         ServerMovementControl           = 0x0636, // handler sends 0x0635 and 0x063A
         ClientEntityCommand             = 0x0637, // bidirectional? packet has both read and write handlers 
         ServerEntityCommand             = 0x0638, // bidirectional? packet has both read and write handlers
-        Server0639                      = 0x0639, // mount up or something
+        ServerMovementControlRemove     = 0x0639,
         ClientZoneChange                = 0x063A,
         ClientPlayerMovementSpeedUpdate = 0x063B,
         ServerAuthDenied                = 0x063D,
@@ -391,6 +391,9 @@ namespace NexusForever.Network.Message
         ServerSpellThresholdStart       = 0x0816,
         ServerSpellThresholdUpdate      = 0x0817, 
         Server0818                      = 0x0818,
+        Server081A                      = 0x081A, // spline related
+        Server081B                      = 0x081B, // spline related
+        Server081C                      = 0x081C, // spline related
         ClientStorefrontPurchaseGift    = 0x0828,
         ClientStorefrontPurchase        = 0x082A,
         ClientStorefrontRequestCatalog  = 0x082D,

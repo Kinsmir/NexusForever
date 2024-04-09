@@ -18,6 +18,11 @@ namespace NexusForever.Game.Abstract.Entity
         /// Return <see cref="QuestState"/> for supplied quest.
         /// </summary>
         QuestState? GetQuestState(ushort questId);
+        
+        /// <summary>
+        /// Get the progress of a quest objective.
+        /// </summary>
+        QuestObjectiveState GetQuestObjectiveProgress(ushort questId, int index);
 
         /// <summary>
         /// Mention a quest from supplied quest id, skipping any prerequisites checks.
@@ -89,7 +94,7 @@ namespace NexusForever.Game.Abstract.Entity
         /// </summary>
         void ObjectiveUpdate(QuestObjectiveType type, uint data, uint progress);
 
-        // <summary>
+        /// <summary>
         /// Update any active quest <see cref="IQuestObjective"/>'s with supplied ID with progress.
         /// </summary>
         void ObjectiveUpdate(uint id, uint progress);

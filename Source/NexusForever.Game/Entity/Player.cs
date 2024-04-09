@@ -176,15 +176,6 @@ namespace NexusForever.Game.Entity
         public uint? ControlGuid { get; private set; }
 
         /// <summary>
-        /// Guid of the <see cref="IVehicle"/> the <see cref="IPlayer"/> is a passenger on.
-        /// </summary>
-        public uint? VehicleGuid
-        {
-            get => MovementManager.GetPlatform();
-            set => MovementManager.SetPlatform(value);
-        }
-
-        /// <summary>
         /// Guid of the <see cref="IVanityPet"/> currently summoned by the <see cref="IPlayer"/>.
         /// </summary>
         public uint? VanityPetGuid { get; set; }
@@ -600,8 +591,6 @@ namespace NexusForever.Game.Entity
                     map.EnqueueAdd(vanityPet, position);
             }
 
-            pendingTeleport = null;
-
             SendPacketsAfterAddToMap();
 
             if (!IsAlive)
@@ -654,7 +643,7 @@ namespace NexusForever.Game.Entity
 
             ResidenceManager.SendHousingBasics();
             Session.EnqueueMessageEncrypted(new ServerHousingNeighbors());
-            Session.EnqueueMessageEncrypted(new ServerInstanceSettings());
+            Session.EnqueueMessageEncrypted(new ServerInstanceSettings() { Unknown3 = 69 });
 
             SetControl(this);
 
@@ -739,7 +728,7 @@ namespace NexusForever.Game.Entity
             base.AddVisible(entity);
 
             if (entity is IWorldEntity worldEntity)
-                Session.EnqueueMessageEncrypted(worldEntity.BuildCreatePacket());
+                Session.EnqueueMessageEncrypted(worldEntity.BuildCreatePacket(IsLoading));
 
             if (entity is IPlayer playerEntity)
                 Session.EnqueueMessageEncrypted(new ServerSetUnitPathType
@@ -798,9 +787,6 @@ namespace NexusForever.Game.Entity
         /// </summary>
         public void SetControl(IWorldEntity entity)
         {
-            if (entity.Guid == ControlGuid)
-                return;
-
             if (ControlGuid != null)
             {
                 IWorldEntity control = Map.GetEntity<IWorldEntity>(ControlGuid.Value);
@@ -808,16 +794,21 @@ namespace NexusForever.Game.Entity
                     control.ControllerGuid = null;
             }
 
-            uint? guid = entity != this ? entity.Guid : null;
-            ControlGuid           = guid;
-            entity.ControllerGuid = guid;
+            ControlGuid = entity?.Guid;
 
-            Session.EnqueueMessageEncrypted(new ServerMovementControl
+            if (ControlGuid != null)
             {
-                Ticket    = 1,
-                Immediate = true,
-                UnitId    = entity.Guid
-            });
+                entity.ControllerGuid = ControlGuid;
+
+                Session.EnqueueMessageEncrypted(new ServerMovementControl
+                {
+                    Ticket    = 1,
+                    Immediate = true,
+                    UnitId    = ControlGuid.Value
+                });
+            }
+            else
+                Session.EnqueueMessageEncrypted(new ServerMovementControlRemove());
         }
 
         private void Logout()
@@ -985,6 +976,23 @@ namespace NexusForever.Game.Entity
         }
 
         /// <summary>
+        /// Invoked when <see cref="IPlayer""/> has finished loading and is ready to enter world.
+        /// </summary>
+        public void OnEnteredWorld()
+        {
+            // right before the loading screen is removed we can now send the actual network entity commands
+            // this ensures there is no desync between the client and server caused by loading
+            foreach (IGridEntity item in visibleEntities.Values)
+                if (item is IWorldEntity we && we.MovementManager.RequiresSynchronisation)
+                    we.MovementManager.SendNetworkEntityCommands(Session);
+
+            Session.EnqueueMessageEncrypted(new ServerPlayerEnteredWorld());
+
+            pendingTeleport = null;
+            IsLoading = false;
+        }
+
+        /// <summary>
         /// Used to send the current in game time to this player
         /// </summary>
         private void SendInGameTime()
@@ -1086,7 +1094,7 @@ namespace NexusForever.Game.Entity
         /// </summary>
         public bool CanMount()
         {
-            return VehicleGuid == null && pendingTeleport == null;
+            return PlatformGuid == null && pendingTeleport == null;
         }
 
         /// <summary>
@@ -1094,11 +1102,11 @@ namespace NexusForever.Game.Entity
         /// </summary>
         public void Dismount()
         {
-            if (VehicleGuid == null)
+            if (PlatformGuid == null)
                 return;
 
-            IVehicle vehicle = GetVisible<IVehicle>(VehicleGuid.Value);
-            vehicle.PassengerRemove(this);
+            IVehicle vehicle = GetVisible<IVehicle>(PlatformGuid.Value);
+            vehicle?.PassengerRemove(this);
         }
 
         /// <summary>
@@ -1123,7 +1131,7 @@ namespace NexusForever.Game.Entity
 
         private void RemoveControlUnit()
         {
-            if (ControlGuid == null)
+            if (ControlGuid == null || ControlGuid == Guid)
                 return;
 
             IWorldEntity controlled = Map.GetEntity<IWorldEntity>(ControlGuid.Value);

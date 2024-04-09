@@ -12,7 +12,6 @@ using NexusForever.Game.Cinematic;
 using NexusForever.Game.Combat;
 using NexusForever.Game.Customisation;
 using NexusForever.Game.Entity;
-using NexusForever.Game.Entity.Movement;
 using NexusForever.Game.Guild;
 using NexusForever.Game.Housing;
 using NexusForever.Game.Map;
@@ -90,7 +89,6 @@ namespace NexusForever.WorldServer
             EntityCommandManager.Instance.Initialise();
             EntityCacheManager.Instance.Initialise();
             FactionManager.Instance.Initialise();
-            GlobalMovementManager.Instance.Initialise();
 
             GlobalCinematicManager.Instance.Initialise();
             ChatFormatManager.Instance.Initialise();
