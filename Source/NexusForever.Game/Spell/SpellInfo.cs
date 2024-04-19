@@ -20,7 +20,7 @@ namespace NexusForever.Game.Spell
         public PrerequisiteEntry TargetCastPrerequisites { get; }
         public PrerequisiteEntry CasterPersistencePrerequisites { get; }
         public PrerequisiteEntry TargetPersistencePrerequisites { get; }
-        public List<PrerequisiteEntry> PrerequisiteRunners { get; } = new List<PrerequisiteEntry>();
+        public List<PrerequisiteEntry> PrerequisiteRunners { get; } = new();
 
         public List<TelegraphDamageEntry> Telegraphs { get; }
         public List<Spell4EffectsEntry> Effects { get; }
@@ -28,7 +28,7 @@ namespace NexusForever.Game.Spell
         public List<SpellPhaseEntry> Phases { get; }
 
         public Spell4VisualGroupEntry VisualGroup { get; }
-        public List<Spell4VisualEntry> Visuals { get; } = new List<Spell4VisualEntry>();
+        public List<Spell4VisualEntry> Visuals { get; } = new();
         public List<SpellCoolDownEntry> Cooldowns { get; } = new();
 
         private Dictionary<int /* orderIndex */, ISpellInfo /* spell4Id */> thresholdCache = new();

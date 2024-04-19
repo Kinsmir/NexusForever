@@ -1,4 +1,5 @@
 using System.Numerics;
+using Microsoft.Extensions.DependencyInjection;
 using NexusForever.Game.Abstract.Entity;
 using NexusForever.Game.Abstract.Housing;
 using NexusForever.Game.Abstract.Spell;
@@ -11,6 +12,7 @@ using NexusForever.Game.Static.Spell;
 using NexusForever.GameTable;
 using NexusForever.GameTable.Model;
 using NexusForever.Network.World.Message.Model;
+using NexusForever.Shared;
 using NLog;
 
 namespace NexusForever.Game.Spell
@@ -83,7 +85,11 @@ namespace NexusForever.Game.Spell
             if (!player.CanMount())
                 return;
 
-            var mount = new Mount(player, spell.Parameters.SpellInfo.Entry.Id, info.Entry.DataBits00, info.Entry.DataBits01, info.Entry.DataBits04);
+            // TODO: needs to be replaced once spell effect handlers aren't static
+            var factory = LegacyServiceProvider.Provider.GetService<IEntityFactory>();
+
+            var mount = factory.CreateEntity<IMountEntity>();
+            mount.Initialise(player, spell.Parameters.SpellInfo.Entry.Id, info.Entry.DataBits00, info.Entry.DataBits01, info.Entry.DataBits04);
             mount.EnqueuePassengerAdd(player, VehicleSeatType.Pilot, 0);
 
             // usually for hover boards
@@ -230,20 +236,24 @@ namespace NexusForever.Game.Spell
             // enqueue removal of existing vanity pet if summoned
             if (player.VanityPetGuid != null)
             {
-                IVanityPet oldVanityPet = player.GetVisible<IVanityPet>(player.VanityPetGuid.Value);
+                IPetEntity oldVanityPet = player.GetVisible<IPetEntity>(player.VanityPetGuid.Value);
                 oldVanityPet?.RemoveFromMap();
                 player.VanityPetGuid = 0u;
             }
 
-            var vanityPet = new VanityPet(player, info.Entry.DataBits00);
+            // TODO: needs to be replaced once spell effect handlers aren't static
+            var factory = LegacyServiceProvider.Provider.GetService<IEntityFactory>();
+
+            var pet = factory.CreateEntity<IPetEntity>();
+            pet.Initialise(player, info.Entry.DataBits00);
 
             var position = new MapPosition
             {
                 Position = player.Position
             };
 
-            if (player.Map.CanEnter(vanityPet, position))
-                player.Map.EnqueueAdd(vanityPet, position);
+            if (player.Map.CanEnter(pet, position))
+                player.Map.EnqueueAdd(pet, position);
         }
 
         [SpellEffectHandler(SpellEffectType.TitleGrant)]
@@ -260,24 +270,15 @@ namespace NexusForever.Game.Spell
         {
         }
 
-        [SpellEffectHandler(SpellEffectType.Activate)]
-        public static void HandleEffectActivate(ISpell spell, IUnitEntity target, ISpellTargetEffectInfo info)
-        {
-            if (spell.Parameters.ClientSideInteraction == null)
-                log.Error($"No CSI present for spell {spell.Spell4Id} cast by {spell.Caster.Type}");
-
-            spell.Parameters.ClientSideInteraction?.HandleSuccess(spell);
-        }
-
         [SpellEffectHandler(SpellEffectType.UnitPropertyModifier)]
         public static void HandleEffectPropertyModifier(ISpell spell, IUnitEntity target, ISpellTargetEffectInfo info)
         {
             // TODO: I suppose these could be cached somewhere instead of generating them every single effect?
-            SpellPropertyModifier modifier = 
-                new SpellPropertyModifier((Property)info.Entry.DataBits00, 
-                    info.Entry.DataBits01, 
-                    BitConverter.UInt32BitsToSingle(info.Entry.DataBits02), 
-                    BitConverter.UInt32BitsToSingle(info.Entry.DataBits03), 
+            SpellPropertyModifier modifier =
+                new SpellPropertyModifier((Property)info.Entry.DataBits00,
+                    info.Entry.DataBits01,
+                    BitConverter.UInt32BitsToSingle(info.Entry.DataBits02),
+                    BitConverter.UInt32BitsToSingle(info.Entry.DataBits03),
                     BitConverter.UInt32BitsToSingle(info.Entry.DataBits04));
             target.AddSpellModifierProperty(modifier, spell.Parameters.SpellInfo.Entry.Id);
 
@@ -288,6 +289,12 @@ namespace NexusForever.Game.Spell
             //    {
             //        player.RemoveSpellProperty((Property)info.Entry.DataBits00, parameters.SpellInfo.Entry.Id);
             //    }));
+        }
+
+        [SpellEffectHandler(SpellEffectType.Activate)]
+        public static void HandleEffectActivate(ISpell spell, IUnitEntity target, ISpellTargetEffectInfo info)
+        {
+            spell.Parameters.ClientSideInteraction?.HandleSuccess(spell);
         }
     }
 }

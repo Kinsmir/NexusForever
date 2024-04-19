@@ -1,9 +1,11 @@
-﻿using NexusForever.Game.Abstract.Entity;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NexusForever.Game.Abstract.Entity;
 using NexusForever.Game.Abstract.Spell;
 using NexusForever.Game.Entity;
 using NexusForever.Game.Spell.Event;
 using NexusForever.Game.Static.Spell;
 using NexusForever.GameTable.Model;
+using NexusForever.Shared;
 using NexusForever.Shared.Game;
 using NLog;
 
@@ -92,22 +94,24 @@ namespace NexusForever.Game.Spell
 
             if (Parameters.SpellInfo.BaseInfo.Entry.Creature2IdPositionalAoe > 0)
             {
-                Simple positionalEntity = new Simple(Parameters.SpellInfo.BaseInfo.Entry.Creature2IdPositionalAoe, (entity) =>
+                var factory = LegacyServiceProvider.Provider.GetService<IEntityFactory>();
+                var positionalEntity = factory.CreateEntity<ISimpleEntity>();
+                positionalEntity.Initialise(Parameters.SpellInfo.BaseInfo.Entry.Creature2IdPositionalAoe, (entity) =>
                 {
-                    entity.Rotation = Caster.Rotation;
+                    entity.Rotation = caster.Rotation;
                     Parameters.PositionalUnitId = entity.Guid;
 
                     status = SpellStatus.Casting;
                     log.Trace($"Spell {Parameters.SpellInfo.Entry.Id} has started casting.");
                 });
 
-                Caster.Map.EnqueueAdd(positionalEntity, new Map.MapPosition
+                caster.Map.EnqueueAdd(positionalEntity, new Map.MapPosition
                 {
                     Info = new Map.MapInfo
                     {
-                        Entry = Caster.Map.Entry
+                        Entry = caster.Map.Entry
                     },
-                    Position = Caster.Position
+                    Position = caster.Position
                 });
             }
             else

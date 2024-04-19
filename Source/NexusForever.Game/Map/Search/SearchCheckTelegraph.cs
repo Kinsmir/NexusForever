@@ -24,9 +24,6 @@ namespace NexusForever.Game.Map.Search
             if (telegraph.TelegraphTargetTypeFlags.HasFlag(TelegraphTargetTypeFlags.Other) && entity == caster)
                 return false;
 
-            if (entity is not IUnitEntity unit)
-                return false;
-
             return telegraph.InsideTelegraph(entity.Position, entity.HitRadius);
         }
     }

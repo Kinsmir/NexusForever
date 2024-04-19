@@ -12,6 +12,7 @@ using NexusForever.Network.Message;
 using NexusForever.Network.World.Message.Model;
 using NexusForever.Network.World.Message.Static;
 using NLog;
+using System;
 
 namespace NexusForever.WorldServer.Network.Message.Handler
 {
@@ -77,7 +78,7 @@ namespace NexusForever.WorldServer.Network.Message.Handler
                     VendorHandler.HandleClientVendor(session, entityInteraction);
                     break;
                 case 68: // "MailboxActivate"
-                    var mailboxEntity = session.Player.Map.GetEntity<IMailbox>(entityInteraction.Guid);
+                    var mailboxEntity = session.Player.Map.GetEntity<IMailboxEntity>(entityInteraction.Guid);
                     break;
                 case 8: // "HousingGuildNeighborhoodBrokerOpen"
                 case 40:

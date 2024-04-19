@@ -103,7 +103,7 @@ namespace NexusForever.Game.Spell
             {
                 if (CastMethod == CastMethod.RapidTap && result != CastResult.PrereqCasterCast)
                 {
-                    if (Caster is IPlayer player)
+                    if (caster is IPlayer player)
                         player.SpellManager.SetAsContinuousCast(null);
 
                     SendSpellCastResult(result);
@@ -139,7 +139,7 @@ namespace NexusForever.Game.Spell
             if (spellInfo == null || thresholdsEntry == null)
                 throw new InvalidOperationException($"{spellInfo} or {thresholdsEntry} is null!");
 
-            Spell thresholdSpell = GlobalSpellManager.Instance.NewSpell((CastMethod)spellInfo.BaseInfo.Entry.CastMethod, Caster, new SpellParameters
+            Spell thresholdSpell = GlobalSpellManager.Instance.NewSpell((CastMethod)spellInfo.BaseInfo.Entry.CastMethod, caster, new SpellParameters
             {
                 SpellInfo = spellInfo,
                 ParentSpellInfo = Parameters.SpellInfo,
@@ -180,7 +180,7 @@ namespace NexusForever.Game.Spell
 
         private void SendThresholdStart()
         {
-            if (Caster is IPlayer player)
+            if (caster is IPlayer player)
                 player.Session.EnqueueMessageEncrypted(new ServerSpellThresholdStart
                 {
                     Spell4Id = Parameters.SpellInfo.Entry.Id,
@@ -192,7 +192,7 @@ namespace NexusForever.Game.Spell
 
         protected void SendThresholdUpdate()
         {
-            if (Caster is IPlayer player)
+            if (caster is IPlayer player)
                 player.Session.EnqueueMessageEncrypted(new ServerSpellThresholdUpdate
                 {
                     Spell4Id = Parameters.ParentSpellInfo?.Entry.Id ?? Spell4Id,
@@ -209,7 +209,7 @@ namespace NexusForever.Game.Spell
         {
             base.OnStatusChange(previousStatus, status);
 
-            if (status == SpellStatus.Finished && Caster is IPlayer player)
+            if (status == SpellStatus.Finished && caster is IPlayer player)
             {
                 // Clear any Threshold information sent to the caster.
                 if (thresholdMax > 0)

@@ -13,11 +13,10 @@ namespace NexusForever.Script.Template.Collection
             sc.AddTransient<ICollectionFactory, CollectionFactory>();
 
             sc.AddTransient<IOwnedScriptCollection<IBaseMap>, OwnedScriptCollection<IBaseMap>>();
-            sc.AddTransient<IOwnedScriptCollection<INonPlayer>, OwnedScriptCollection<INonPlayer>>();
+            sc.AddTransient<IOwnedScriptCollection<INonPlayerEntity>, OwnedScriptCollection<INonPlayerEntity>>();
             sc.AddTransient<IOwnedScriptCollection<ICreatureEntity>, OwnedScriptCollection<ICreatureEntity>>();
             sc.AddTransient<IOwnedScriptCollection<IPlayer>, OwnedScriptCollection<IPlayer>>();
             sc.AddTransient<IOwnedScriptCollection<IQuest>, OwnedScriptCollection<IQuest>>();
-            sc.AddTransient<IOwnedScriptCollection<ISimple>, OwnedScriptCollection<ISimple>>();
             sc.AddTransient<IOwnedScriptCollection<ISpell>, OwnedScriptCollection<ISpell>>();
         }
     }

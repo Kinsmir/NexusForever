@@ -46,7 +46,7 @@ namespace NexusForever.Network.Message
         Server0104                      = 0x0104, // Galactic Archive
         ServerGenericError              = 0x0106,
         ClientGuildHolomarkUpdate       = 0x010C,
-        ServerHousingPrivacy            = 0x010E,
+        ServerHousingBasics             = 0x010E,
         ServerCharacter                 = 0x010F, // single character
         ServerItemAdd                   = 0x0111,
         ServerCharacterList             = 0x0117,
@@ -389,7 +389,7 @@ namespace NexusForever.Network.Message
         ServerSpellBuffRemove           = 0x0813,
         ServerSpellThresholdClear       = 0x0814,
         ServerSpellThresholdStart       = 0x0816,
-        ServerSpellThresholdUpdate      = 0x0817, 
+        ServerSpellThresholdUpdate      = 0x0817,
         Server0818                      = 0x0818,
         Server081A                      = 0x081A, // spline related
         Server081B                      = 0x081B, // spline related

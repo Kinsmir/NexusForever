@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using NexusForever.Game.Abstract.Entity;
 using NexusForever.Game.Abstract.Spell;
+using NexusForever.Game.Entity;
 using NexusForever.Game.Static.Spell;
 using NexusForever.GameTable.Model;
 using NexusForever.Network.World.Message.Model;
@@ -49,6 +50,8 @@ namespace NexusForever.Game.Spell
                 Entry    = entry;
             }
 
+            List<ServerCombatLog> ISpellTargetEffectInfo.CombatLogs { get; }
+
             public void AddDamage(DamageType damageType, uint damage)
             {
                 // TODO: handle this correctly
@@ -64,6 +67,11 @@ namespace NexusForever.Game.Spell
             public void AddDamage(IDamageDescription damage)
             {
                 Damage = damage;
+            }
+
+            void ISpellTargetEffectInfo.AddCombatLog(ServerCombatLog combatLog)
+            {
+                AddCombatLog(combatLog);
             }
 
             public void AddCombatLog(ServerCombatLog combatLog)

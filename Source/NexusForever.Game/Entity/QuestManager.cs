@@ -154,13 +154,13 @@ namespace NexusForever.Game.Entity
             });
         }
         
-        /// <summary>
+        /*/// <summary>
         /// Return <see cref="QuestState"/> for supplied quest.
         /// </summary>
         public uint GetQuestObjectiveProgress(ushort questId, int objectiveId)
         {
             return GetQuest(questId)?.GetObjectiveProgress(objectiveId) ?? 0;
-        }
+        }*/
 
         /// <summary>
         /// Return <see cref="QuestState"/> for supplied quest.

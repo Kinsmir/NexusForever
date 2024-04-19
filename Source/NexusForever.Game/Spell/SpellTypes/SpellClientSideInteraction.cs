@@ -41,7 +41,7 @@ namespace NexusForever.Game.Spell
         private void SendSpellStartClientInteraction()
         {
             // Shoule we actually emit client interaction events to everyone? - Logs suggest that we only see this packet firing when the client interacts with -something- and is likely only sent to them
-            if (Caster is IPlayer player)
+            if (caster is IPlayer player)
             {
                 player.Session.EnqueueMessageEncrypted(new ServerSpellStartClientInteraction
                 {
@@ -53,9 +53,9 @@ namespace NexusForever.Game.Spell
         }
 
         /// <summary>
-        /// Used when a <see cref="IClientSideInteraction"/> succeeds
+        /// Used when a <see cref="CSI.ClientSideInteraction"/> succeeds
         /// </summary>
-        /// /// <remarks>
+        /// <remarks>
         /// Some spells offer a CSI "Event" in the client - a dialog box, a mini-game, etc. - but, do not have a ClientUniqueId as not triggered by player directly doing something.
         /// In this case they are spells cast by something else that require player interaction, e.g. when you get rooted but can break the root by holding down a key.
         /// We only generated a <see cref="IClientSideInteraction"/> instance in the cases where the client delivers a ClientUniqueId.
@@ -78,9 +78,22 @@ namespace NexusForever.Game.Spell
             CancelCast(CastResult.ClientSideInteractionFail);
         }
 
+        protected override void OnStatusChange(SpellStatus previousStatus, SpellStatus status)
+        {
+            switch (status)
+            {
+                case SpellStatus.Casting:
+                    if (Parameters.ClientSideInteraction.Entry != null)
+                        SendSpellStart();
+                    else
+                        SendSpellStartClientInteraction();
+                    break;
+            }
+        }
+
         protected override uint GetPrimaryTargetId()
         {
-            return Parameters.ClientSideInteraction.Entry != null ? Caster.Guid : Parameters.PrimaryTargetId;
+            return Parameters.ClientSideInteraction.Entry != null ? caster.Guid : Parameters.PrimaryTargetId;
         }
     }
 }

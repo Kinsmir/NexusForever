@@ -1,5 +1,6 @@
 ﻿using NexusForever.Game.Abstract.Combat;
 using NexusForever.Game.Abstract.Entity;
+using NexusForever.Game.Abstract.Entity.Movement;
 using NexusForever.Game.Abstract.Spell;
 using NexusForever.Game.Combat;
 using NexusForever.Game.Spell;
@@ -87,13 +88,17 @@ namespace NexusForever.Game.Entity
 
         private Dictionary<Property, Dictionary</*spell4Id*/uint, ISpellPropertyModifier>> spellProperties = new();
 
-        protected UnitEntity(EntityType type)
-            : base(type)
+        #region Dependency Injection
+
+        public UnitEntity(IMovementManager movementManager)
+            : base(movementManager)
         {
             ThreatManager = new ThreatManager(this);
 
             InitialiseHitRadius();
         }
+
+        #endregion
 
         public override void Dispose()
         {
@@ -243,6 +248,48 @@ namespace NexusForever.Game.Entity
                 Shield += (uint)(MaxShieldCapacity * GetPropertyValue(Property.ShieldRegenPct) * statUpdateTimer.Duration);
         }
 
+        /// Checks if this <see cref="IUnitEntity"/> is currently casting a spell.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsCasting()
+        {
+            foreach (Spell.Spell spell in pendingSpells)
+                if (spell.IsCasting)
+                    return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Spell4Entry"/> Id
+        /// </summary>
+        public bool HasSpell(uint spell4Id, out ISpell spell, bool isCasting = false)
+        {
+            spell = pendingSpells.FirstOrDefault(i => i.IsCasting == isCasting && !i.IsFinished && i.Spell4Id == spell4Id);
+
+            return spell != null;
+        }
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="CastMethod"/>
+        /// </summary>
+        public bool HasSpell(CastMethod castMethod, out ISpell spell)
+        {
+            spell = pendingSpells.FirstOrDefault(i => !i.IsCasting && !i.IsFinished && i.CastMethod == castMethod);
+
+            return spell != null;
+        }
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Func"/> predicate.
+        /// </summary>
+        public bool HasSpell(Func<ISpell, bool> predicate, out ISpell spell)
+        {
+            spell = pendingSpells.FirstOrDefault(predicate);
+
+            return spell != null;
+        }
+
         /// <summary>
         /// Cast a <see cref="ISpell"/> with the supplied spell4 id.
         /// </summary>
@@ -381,7 +428,7 @@ namespace NexusForever.Game.Entity
         public bool IsValidAttackTarget()
         {
             // TODO: Expand on this. There's bound to be flags or states that should prevent an entity from being attacked.
-            return (this is IPlayer or INonPlayer);
+            return (this is IPlayer or INonPlayerEntity);
         }
 
         /// <summary>
@@ -529,49 +576,6 @@ namespace NexusForever.Game.Entity
             InCombat   = ThreatManager.IsThreatened;
             Sheathed   = !inCombat;
             StandState = inCombat ? StandState.Stand : StandState.State0;
-        }
-            
-		/// <summary>
-        /// Checks if this <see cref="IUnitEntity"/> is currently casting a spell.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsCasting()
-        {
-            foreach (Spell.Spell spell in pendingSpells)
-                if (spell.IsCasting)
-                    return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Spell4Entry"/> Id
-        /// </summary>
-        public bool HasSpell(uint spell4Id, out ISpell spell, bool isCasting = false)
-        {
-            spell = pendingSpells.FirstOrDefault(i => i.IsCasting == isCasting && !i.IsFinished && i.Spell4Id == spell4Id);
-
-            return spell != null;
-        }
-
-        /// <summary>
-        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="CastMethod"/>
-        /// </summary>
-        public bool HasSpell(CastMethod castMethod, out ISpell spell)
-        {
-            spell = pendingSpells.FirstOrDefault(i => !i.IsCasting && !i.IsFinished && i.CastMethod == castMethod);
-
-            return spell != null;
-        }
-
-        /// <summary>
-        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Func"/> predicate.
-        /// </summary>
-        public bool HasSpell(Func<ISpell, bool> predicate, out ISpell spell)
-        {
-            spell = pendingSpells.FirstOrDefault(predicate);
-
-            return spell != null;
         }
     }
 }

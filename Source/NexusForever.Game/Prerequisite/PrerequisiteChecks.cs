@@ -152,14 +152,14 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.AccountItemClaimed)]
-        private static bool PrerequisiteCheckAccountItemClaimed(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckAccountItemClaimed(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             switch (comparison)
             {
+                /*case PrerequisiteComparison.Equal:
+                    return player.Inventory.HasItem(value);
                 case PrerequisiteComparison.NotEqual:
-                    //return !player.Inventory.HasItem(value);
-                case PrerequisiteComparison.Equal:
-                    //return player.Inventory.HasItem(value);
+                    return !player.Inventory.HasItem(value);*/
                 default:
                     log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.AccountItemClaimed}!");
                     return false;
@@ -182,7 +182,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.CosmicRewards)]
-        private static bool PrerequisiteCheckCosmicRewards(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckCosmicRewards(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             switch (comparison)
             {
@@ -230,7 +230,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.Stealth)]
-        private static bool PrerequisiteCheckStealth(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckStealth(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             // TODO: Add value to the check. It's a spell4 Id.
 
@@ -246,7 +246,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.TargetIsPlayer)]
-        private static bool PrerequisiteCheckTargetIsPlayer(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckTargetIsPlayer(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             // TODO: Currently this is a wasted effort. We only evaluate prereq's against Players. This suggests we may need to start evaluating against all entities.
 
@@ -268,10 +268,10 @@ namespace NexusForever.Game.Prerequisite
         {
             switch (comparison)
             {
-                case PrerequisiteComparison.Equal:
+                /*case PrerequisiteComparison.Equal:
                     return player.QuestManager.GetQuestObjectiveProgress((ushort)objectId, (int)value) == 0;
                 case PrerequisiteComparison.NotEqual:
-                    return player.QuestManager.GetQuestObjectiveProgress((ushort)objectId, (int)value) != 0;
+                    return player.QuestManager.GetQuestObjectiveProgress((ushort)objectId, (int)value) != 0;*/
                 default:
                     log.Warn($"Unhandled PrerequisiteComparison {comparison} for {PrerequisiteType.Quest}!");
                     return false;
@@ -279,7 +279,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.Unhealthy)]
-        private static bool PrerequesiteCheckUnhealthy(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequesiteCheckUnhealthy(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             // TODO: Investigate further. Unknown what the value and objectId refers to at this time.
 
@@ -322,7 +322,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.VitalPercent)]
-        private static bool PrerequisiteCheckVitalPercent(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckVitalPercent(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             // TODO: Uncomment when VitalPercent are added ;)
             
@@ -374,7 +374,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.ActiveSpellCount)]
-        private static bool PrerequisiteCheckSpellActiveSpellCount(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckSpellActiveSpellCount(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             switch (comparison)
             {
@@ -412,7 +412,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.SpellMechanic)]
-        private static bool PrerequisiteCheckSpellMechanic(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckSpellMechanic(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             // TODO: Uncomment when SpellMechanic are added ;)
             
@@ -438,7 +438,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.PositionalRequirement)]
-        private static bool PrerequisiteCheckPositionalRequirement(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckPositionalRequirement(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             // TODO: Uncomment when PositionalRequirement are added ;)
             
@@ -467,7 +467,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.Entitlement)]
-        private static bool PrerequisiteCheckEntitlement(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckEntitlement(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             // TODO: Uncomment when Entitlement are added ;)
             
@@ -505,7 +505,7 @@ namespace NexusForever.Game.Prerequisite
         }
 
         [PrerequisiteCheck(PrerequisiteType.CostumeUnlocked)]
-        private static bool PrerequisiteCheckCostumeUnlocked(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId, IUnitEntity target)
+        private static bool PrerequisiteCheckCostumeUnlocked(IPlayer player, PrerequisiteComparison comparison, uint value, uint objectId)
         {
             switch (comparison)
             {

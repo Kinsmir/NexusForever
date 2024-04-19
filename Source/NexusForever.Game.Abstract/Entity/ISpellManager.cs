@@ -105,7 +105,7 @@ namespace NexusForever.Game.Abstract.Entity
         /// Update active Innate Ability with supplied index.
         /// </summary>
         void SetInnate(byte index);
-        
+
         void ApplyAmps();
         void SendInitialPackets();
         void SendServerAbilityPoints();

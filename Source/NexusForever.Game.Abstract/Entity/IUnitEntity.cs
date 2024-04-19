@@ -1,4 +1,4 @@
-﻿using NexusForever.Game.Abstract.Combat;
+using NexusForever.Game.Abstract.Combat;
 using NexusForever.Game.Abstract.Spell;
 using NexusForever.Game.Static.Entity;
 using NexusForever.Game.Static.Spell;
@@ -44,10 +44,25 @@ namespace NexusForever.Game.Abstract.Entity
         /// </summary>
         void RemoveSpellProperties(uint spell4Id);
 
-        /// Cast a <see cref="ISpell"/> with the supplied spell4 id.
+        /// Checks if this <see cref="IUnitEntity"/> is currently casting a spell.
         /// </summary>
-        /// <param name="spell4Id"></param>
-        void CastSpell(uint spell4Id);
+        /// <returns></returns>
+        bool IsCasting();
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Spell4Entry"/> Id
+        /// </summary>
+        bool HasSpell(uint spell4Id, out ISpell spell, bool isCasting = false);
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="CastMethod"/>
+        /// </summary>
+        bool HasSpell(CastMethod castMethod, out ISpell spell);
+
+        /// <summary>
+        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Func"/> predicate.
+        /// </summary>
+        bool HasSpell(Func<ISpell, bool> predicate, out ISpell spell);
 
         /// <summary>
         /// Cast a <see cref="ISpell"/> with the supplied spell id and <see cref="ISpellParameters"/>.
@@ -75,27 +90,6 @@ namespace NexusForever.Game.Abstract.Entity
         /// <param name="castingId">Casting ID of the spell to cancel</param>
         void CancelSpellCast(uint castingId);
 
-        /// <summary>
-        /// Checks if this <see cref="IUnitEntity"/> is currently casting a spell.
-        /// </summary>
-        /// <returns></returns>
-        bool IsCasting();
-
-        /// <summary>
-        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Spell4Entry"/> Id
-        /// </summary>
-        bool HasSpell(uint spell4Id, out ISpell spell, bool isCasting = false);
-
-        /// <summary>
-        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="CastMethod"/>
-        /// </summary>
-        bool HasSpell(CastMethod castMethod, out ISpell spell);
-
-        /// <summary>
-        /// Check if this <see cref="IUnitEntity"/> has a spell active with the provided <see cref="Func"/> predicate.
-        /// </summary>
-        bool HasSpell(Func<ISpell, bool> predicate, out ISpell spell);
-        
         /// <summary>
         /// Determine if this <see cref="IUnitEntity"/> can attack supplied <see cref="IUnitEntity"/>.
         /// </summary>

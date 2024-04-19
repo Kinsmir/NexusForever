@@ -19,10 +19,10 @@ namespace NexusForever.Game.Abstract.Entity
         /// </summary>
         QuestState? GetQuestState(ushort questId);
         
-        /// <summary>
+        /*/// <summary>
         /// Get the progress of a quest objective.
         /// </summary>
-        QuestObjectiveState GetQuestObjectiveProgress(ushort questId, int index);
+        QuestObjectiveState GetQuestObjectiveProgress(ushort questId, int index);*/
 
         /// <summary>
         /// Mention a quest from supplied quest id, skipping any prerequisites checks.

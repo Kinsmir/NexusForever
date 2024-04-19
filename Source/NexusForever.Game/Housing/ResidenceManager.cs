@@ -61,14 +61,14 @@ namespace NexusForever.Game.Housing
             // see Residence.GetResidencePrivacyLevel LUA function for more context
             var flags = (Residence?.PrivacyLevel ?? ResidencePrivacyLevel.Public) switch
             {
-                ResidencePrivacyLevel.Public        => ServerHousingPrivacy.ResidencePrivacyLevelFlags.Public,
-                ResidencePrivacyLevel.Private       => ServerHousingPrivacy.ResidencePrivacyLevelFlags.Private,
-                ResidencePrivacyLevel.NeighborsOnly => ServerHousingPrivacy.ResidencePrivacyLevelFlags.NeighborsOnly,
-                ResidencePrivacyLevel.RoommatesOnly => ServerHousingPrivacy.ResidencePrivacyLevelFlags.RoommatesOnly,
+                ResidencePrivacyLevel.Public        => ServerHousingBasics.ResidencePrivacyLevelFlags.Public,
+                ResidencePrivacyLevel.Private       => ServerHousingBasics.ResidencePrivacyLevelFlags.Private,
+                ResidencePrivacyLevel.NeighborsOnly => ServerHousingBasics.ResidencePrivacyLevelFlags.NeighborsOnly,
+                ResidencePrivacyLevel.RoommatesOnly => ServerHousingBasics.ResidencePrivacyLevelFlags.RoommatesOnly,
                 _                                   => throw new NotImplementedException()
             };
 
-            owner.Session.EnqueueMessageEncrypted(new ServerHousingPrivacy
+            owner.Session.EnqueueMessageEncrypted(new ServerHousingBasics
             {
                 ResidenceId     = Residence?.Id ?? 0ul,
                 /*NeighbourhoodId = GuildManager.GetGuild<Community>(GuildType.Community)?.Id ?? 0ul,*/
