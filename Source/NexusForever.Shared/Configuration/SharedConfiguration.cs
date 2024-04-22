@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using NLog;
 
@@ -39,25 +40,34 @@ namespace NexusForever.Shared.Configuration
 
             var builder = ImmutableDictionary.CreateBuilder<Type, string>();
 
-            // create binds on root configuration
+            // Create binds on root configuration
             foreach (PropertyInfo info in typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.PropertyType.GetCustomAttribute<ConfigurationBindAttribute>() != null))
-                InitialiseBindSection(info, info.Name, builder);
+                         .Where(p => p.PropertyType.GetCustomAttribute<ConfigurationBindAttribute>() != null))
+            {
+                // Initialize with a StringBuilder instead of string
+                StringBuilder breadcrumbs = new StringBuilder(info.Name);
+                InitialiseBindSection(info, breadcrumbs, builder);
+            }
 
             binds = builder.ToImmutable();
 
-            log.Trace($"Initalised {binds.Count} configuration bind(s)...");
+            log.Trace($"Initialized {binds.Count} configuration bind(s)...");
         }
 
-        private void InitialiseBindSection(PropertyInfo info, string breadcrumbs, ImmutableDictionary<Type, string>.Builder builder)
+        private void InitialiseBindSection(PropertyInfo info, StringBuilder breadcrumbs, ImmutableDictionary<Type, string>.Builder builder)
         {
-            builder.Add(info.PropertyType, breadcrumbs);
+            builder.Add(info.PropertyType, breadcrumbs.ToString()); // Convert to string only when adding to builder
 
-            // create binds on child configurations
+            // Create binds on child configurations
+            int length = breadcrumbs.Length;
             foreach (PropertyInfo child in info.PropertyType
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.PropertyType.GetCustomAttribute<ConfigurationBindAttribute>() != null))
-                InitialiseBindSection(child, $"{breadcrumbs}:{child.Name}", builder);
+                         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                         .Where(p => p.PropertyType.GetCustomAttribute<ConfigurationBindAttribute>() != null))
+            {
+                breadcrumbs.Append(":").Append(child.Name);
+                InitialiseBindSection(child, breadcrumbs, builder);
+                breadcrumbs.Length = length; // Reset the StringBuilder to its original state before they append
+            }
         }
 
         /// <summary>

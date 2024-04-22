@@ -33,6 +33,8 @@ namespace NexusForever.Game.Map
         /// Distance between a <see cref="IPlayer"/> and a <see cref="IGridEntity"/> before the entity can be seen.
         /// </summary>
         public virtual float? VisionRange { get; protected set; } = DefaultVisionRange;
+        
+        private double currentTick;
 
         public WorldEntry Entry { get; private set; }
         public MapFile File { get; private set; }
@@ -77,10 +79,13 @@ namespace NexusForever.Game.Map
         /// </summary>
         public virtual void Update(double lastTick)
         {
+            this.currentTick = lastTick; // Set the currentTick before using it
+
             ProcessGridActions();
             UpdateGrids(lastTick);
 
-            scriptCollection?.Invoke<IUpdate>(s => s.Update(lastTick));
+            // Use a lambda that does not capture external variables
+            scriptCollection?.Invoke<IUpdate>(script => script.Update(this.currentTick));
         }
 
         private void ProcessGridActions()
