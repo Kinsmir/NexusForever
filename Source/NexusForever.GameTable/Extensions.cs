@@ -1,25 +1,51 @@
 ﻿using System.Text;
+using NLog;
 
 namespace NexusForever.GameTable
 {
     public static class Extensions
     {
+        private static readonly ILogger log = LogManager.GetCurrentClassLogger();
+        
         public static string ReadWideString(this BinaryReader reader)
         {
-            // We don't know if the reader is using the correct encoding. We shouldn't have to do this here,
-            // but that would be alot of changes to make to fix. So instead we'll just create our own reader
-            // and use the base stream with the correct encoding. This should cause no harm, since we advance
-            // the underlying stream and BinaryReader doesn't actually care about position.
-            using var wrappedReader = new BinaryReader(reader.BaseStream, Encoding.Unicode, true);
-            var characters = new List<char>();
+            // Assume that we might not know the reader's encoding
+            // Capture the current position of the base stream in case it's needed
+            long originalPosition = reader.BaseStream.Position;
 
-            while (true)
+            // Try to read the string assuming the reader is using Unicode
+            var characters = new List<char>();
+            try
             {
-                char character = wrappedReader.ReadChar();
-                if (character == 0)
-                    return new string(characters.ToArray());
-                characters.Add(character);
+                while (true)
+                {
+                    char character = reader.ReadChar();  // This assumes Encoding.Unicode if configured correctly
+                    if (character == 0)
+                        break;
+                    characters.Add(character);
+                }
             }
+            catch (Exception ex)
+            {
+                // If an exception occurs (e.g., due to incorrect encoding), reset and try a fallback method
+                reader.BaseStream.Position = originalPosition;
+
+                // Log the exception
+                log.Warn(ex, "Failed to read wide string with current encoding, retrying with Encoding.Unicode.");
+                
+                // Fallback to using a manually configured BinaryReader for Unicode
+                using var safeReader = new BinaryReader(reader.BaseStream, Encoding.Unicode, true);
+                characters.Clear();
+                while (true)
+                {
+                    char character = safeReader.ReadChar();
+                    if (character == 0)
+                        break;
+                    characters.Add(character);
+                }
+            }
+
+            return new string(characters.ToArray());
         }
     }
 }

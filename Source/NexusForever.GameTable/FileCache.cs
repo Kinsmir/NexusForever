@@ -68,13 +68,31 @@ namespace NexusForever.GameTable
         {
             if (!SharedConfiguration.Instance.Get<CacheConfig>().UseCache)
                 return creator(fileName);
+
             CheckAndCleanupCache();
             string cacheName = GetCacheFileName(fileName);
+
             if (File.Exists(cacheName))
-                return JsonConvert.DeserializeObject<T>(File.ReadAllText(cacheName));
+            {
+                using (var stream = File.OpenRead(cacheName))
+                using (var reader = new StreamReader(stream))
+                using (var jsonReader = new JsonTextReader(reader))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
+                    return serializer.Deserialize<T>(jsonReader);
+                }
+            }
 
             T obj = creator(fileName);
-            File.WriteAllText(cacheName, JsonConvert.SerializeObject(obj));
+            using (var stream = File.Create(cacheName))
+            using (var writer = new StreamWriter(stream))
+            using (var jsonWriter = new JsonTextWriter(writer))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(jsonWriter, obj);
+                jsonWriter.Flush();
+            }
+
             return obj;
         }
 
